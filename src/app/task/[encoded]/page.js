@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Buffer } from 'buffer';
 import { notFound } from 'next/navigation';
 import ClientTaskContent from '../../components/ClientTaskContent';
-import { getTask } from '../../api/tasks/[taskId]/route'; // Adjust path if needed
+import { getTask } from '@/app/lib/route';  // Import from your lib folder
 
 // Utility function to decode the encoded string (format: "taskId:password")
 function decode(encodedString) {
@@ -20,7 +20,6 @@ export async function generateStaticParams() {
 }
 
 export default async function TaskPage({ params }) {
-  // Await the params object as recommended by Next.js.
   const resolvedParams = await params;
   const { encoded } = resolvedParams;
   let taskId, decodedPassword;
@@ -31,26 +30,30 @@ export default async function TaskPage({ params }) {
     notFound();
   }
 
-  let task = null;
+  // Fetch task using the local function
+  let taskRecord = null;
   try {
-    task = await getTask(taskId);
+    taskRecord = await getTask(taskId);
   } catch (err) {
     console.error('Error fetching task:', err);
     notFound();
   }
 
-  if (!task) {
+  if (!taskRecord) {
     notFound();
   }
 
+  // Extract only the plain data (fields)
+  const task = taskRecord.fields;
+  
   const password = decodedPassword || 'defaultPassword';
 
   return (
     <>
       <Head>
-        <title>{task.fields.title || 'Task'}</title>
+        <title>{task.title || 'Task'}</title>
       </Head>
-      <ClientTaskContent task={task.fields} taskId={taskId} password={password} />
+      <ClientTaskContent task={task} taskId={taskId} password={password} />
     </>
   );
 }
