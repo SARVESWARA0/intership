@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Buffer } from 'buffer';
 import { notFound } from 'next/navigation';
 import ClientTaskContent from '../../components/ClientTaskContent';
-import { getTask } from '@/app/lib/route';  // Import from your lib folder
+import { getTask } from '@/app/lib/task';  // Import from your lib folder
 
 // Utility function to decode the encoded string (format: "taskId:password")
 function decode(encodedString) {
