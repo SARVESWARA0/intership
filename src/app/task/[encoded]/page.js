@@ -27,7 +27,7 @@ export default async function TaskPage({ params }) {
 
   try {
     ({ taskId, password: decodedPassword } = decode(encoded));
-  } catch (err) {
+  } catch {
     notFound();
   }
 

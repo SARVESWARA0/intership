@@ -60,7 +60,7 @@ function CollapsibleSection({ title, icon, children }: { title: string, icon: Re
 }
 
 function SecretKeyDisplay({ password }: { password: string }) {
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [showPassword] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
   const [toast, setToast] = React.useState<{ show: boolean; message: string }>({
     show: false,
