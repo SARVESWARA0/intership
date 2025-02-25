@@ -9,7 +9,7 @@ function decode(encodedString) {
   const decoded = Buffer.from(encodedString, 'base64').toString();
   const [taskId, password] = decoded.split(':');
   const trimmedPassword = password.slice(0, -1); // Remove last character
-  console.log(trimmedPassword);
+  
   return { taskId, password: trimmedPassword };
 }
 
