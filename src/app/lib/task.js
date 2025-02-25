@@ -8,7 +8,7 @@ export async function getTask(taskId) {
   }
 
   try {
-    console.log('Fetching from Airtable with taskId:', taskId);
+
 
     const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('app1LJNvLgSJaHCgU');
 
