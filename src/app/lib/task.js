@@ -27,7 +27,7 @@ export async function getTask(taskId) {
           }
         });
     });
-
+   console.log('tasks:', tasks);
     return tasks.length > 0 ? tasks[0] : null;
   } catch (error) {
     console.error('Airtable fetch error:', error);

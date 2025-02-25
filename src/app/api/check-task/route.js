@@ -1,4 +1,4 @@
-// app/api/validate-email/route.js
+// app/api/check-task/route.js
 import Airtable from 'airtable';
 
 // Initialize Airtable with your API key and base ID
@@ -134,13 +134,13 @@ export async function POST(request) {
     // STEP 4: Encode the taskId and key
     const encoded = encode(taskId, key);
 
-    // Return the encoded string to the landing page along with task info for caching
+    // Return the encoded string and task details
     return new Response(
       JSON.stringify({ 
         exists: true, 
         encoded,
         taskId,
-        key 
+        key
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );

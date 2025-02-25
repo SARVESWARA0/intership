@@ -8,11 +8,13 @@ import { getTask } from '@/app/lib/task';  // Import from your lib folder
 function decode(encodedString) {
   const decoded = Buffer.from(encodedString, 'base64').toString();
   const [taskId, password] = decoded.split(':');
-  return { taskId, password };
+  const trimmedPassword = password.slice(0, -1); // Remove last character
+  console.log(trimmedPassword);
+  return { taskId, password: trimmedPassword };
 }
 
-// ISR: Revalidate at most once every 60 seconds.
-export const revalidate = 1800;
+
+export const revalidate = 43200;
 
 // Generates no static paths initially.
 export async function generateStaticParams() {
