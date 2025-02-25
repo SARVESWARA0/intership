@@ -12,7 +12,7 @@ function decode(encodedString) {
 }
 
 // ISR: Revalidate at most once every 60 seconds.
-export const revalidate = 60;
+export const revalidate = 1800;
 
 // Generates no static paths initially.
 export async function generateStaticParams() {

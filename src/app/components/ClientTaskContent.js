@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react"
 import { Copy, CalendarDays, LinkIcon, BookOpen, CheckCircle, Clock, Tag, Info, Lock, ChevronDown, ChevronUp } from 'lucide-react'
 import styles from "./TaskDisplay.module.css"
 
-function isValidUrl(string: string) {
+function isValidUrl(string) {
   try {
     new URL(string)
     return true
@@ -12,7 +12,7 @@ function isValidUrl(string: string) {
   }
 }
 
-function convertLinksToJSX(text: string) {
+function convertLinksToJSX(text) {
   if (!text) return null
   return text.split(" ").map((word, index) => {
     if (isValidUrl(word)) {
@@ -33,7 +33,7 @@ function convertLinksToJSX(text: string) {
   })
 }
 
-function ShimmeringTitle({ children }: { children: React.ReactNode }) {
+function ShimmeringTitle({ children }) {
   return (
     <h2 className={`${styles.sectionTitle} ${styles.shimmer}`}>
       {children}
@@ -41,7 +41,7 @@ function ShimmeringTitle({ children }: { children: React.ReactNode }) {
   )
 }
 
-function CollapsibleSection({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) {
+function CollapsibleSection({ title, icon, children }) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
@@ -59,10 +59,10 @@ function CollapsibleSection({ title, icon, children }: { title: string, icon: Re
   )
 }
 
-function SecretKeyDisplay({ password }: { password: string }) {
+function SecretKeyDisplay({ password }) {
   const [showPassword] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
-  const [toast, setToast] = React.useState<{ show: boolean; message: string }>({
+  const [toast, setToast] = React.useState({
     show: false,
     message: "",
   })
@@ -90,7 +90,6 @@ function SecretKeyDisplay({ password }: { password: string }) {
           Secret Key
         </h3>
         <div className={styles.secretKeyActions}>
-          
           <button
             onClick={handleCopy}
             className={styles.iconButton}
@@ -114,22 +113,7 @@ function SecretKeyDisplay({ password }: { password: string }) {
   )
 }
 
-interface Task {
-  title: string
-  description: string
-  resources?: string
-  dueDate?: string
-  category?: string
-  instructions?: string
-}
-
-interface ClientTaskContentProps {
-  task: Task | null
-  taskId: string
-  password: string
-}
-
-export default function ClientTaskContent({ task, taskId, password }: ClientTaskContentProps) {
+export default function ClientTaskContent({ task, taskId, password }) {
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -152,8 +136,7 @@ export default function ClientTaskContent({ task, taskId, password }: ClientTask
     )
   }
 
-  // Default instructions if not provided
-  const defaultInstructions = "You would be prioritized more if you worked on Next.js or display the results in a better frontend and innovative works related to the project.";
+  const defaultInstructions = "You would be prioritized more if you worked on Next.js or display the results in a better frontend and innovative works related to the project."
 
   return (
     <div className={styles.pageContainer}>
@@ -207,7 +190,6 @@ export default function ClientTaskContent({ task, taskId, password }: ClientTask
             )}
           </div>
           
-          {/* Secret Key moved to the bottom */}
           <SecretKeyDisplay password={password} />
         </div>
       </div>
