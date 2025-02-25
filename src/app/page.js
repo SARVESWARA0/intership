@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
 import useTaskStore from '../app/store/taskStore'; // Import the Zustand store
