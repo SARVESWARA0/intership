@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import { Copy, CalendarDays, LinkIcon, BookOpen, CheckCircle, Clock, Tag, Info, Lock, ChevronDown, ChevronUp } from 'lucide-react'
+import { Copy, LinkIcon, BookOpen, CheckCircle, Clock, Tag, Info, Lock, ChevronDown, ChevronUp } from 'lucide-react'
 import styles from "./TaskDisplay.module.css"
 
 function isValidUrl(string) {
@@ -33,9 +33,10 @@ function convertLinksToJSX(text) {
   })
 }
 
-function ShimmeringTitle({ children }) {
+// New SectionTitle without shimmer
+function SectionTitle({ children }) {
   return (
-    <h2 className={`${styles.sectionTitle} ${styles.shimmer}`}>
+    <h2 className={styles.sectionTitle}>
       {children}
     </h2>
   )
@@ -51,10 +52,14 @@ function CollapsibleSection({ title, icon, children }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         {icon}
-        <ShimmeringTitle>{title}</ShimmeringTitle>
+        <SectionTitle>{title}</SectionTitle>
         {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </div>
-      {isOpen && <div className={styles.sectionContent}>{children}</div>}
+      <div className={`${styles.sectionContentWrapper} ${isOpen ? styles.open : styles.closed}`}>
+        <div className={styles.sectionContent}>
+          {children}
+        </div>
+      </div>
     </div>
   )
 }
@@ -143,7 +148,8 @@ export default function ClientTaskContent({ task, taskId, password }) {
       <div className={`${styles.taskCard} ${isScrolled ? styles.scrolled : ''}`}>
         <div className={styles.taskHeader}>
           <div className={styles.taskHeaderContent}>
-            <h1 className={`${styles.taskTitle} ${styles.shimmer}`}>{task.title}</h1>
+            {/* Removed shimmer class from title */}
+            <h1 className={styles.taskTitle}>{task.title}</h1>
             <span className={styles.taskId}>Task #{taskId}</span>
           </div>
         </div>
@@ -167,7 +173,7 @@ export default function ClientTaskContent({ task, taskId, password }) {
           {task.resources && (
             <CollapsibleSection 
               title="Resources" 
-              icon={<CalendarDays className={styles.sectionIcon} size={24} />}
+              icon={<LinkIcon className={styles.sectionIcon} size={24} />}
             >
               <div className={styles.resourcesContent}>
                 <pre className={styles.resources}>{convertLinksToJSX(task.resources)}</pre>
