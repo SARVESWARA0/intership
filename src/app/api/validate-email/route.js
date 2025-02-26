@@ -130,7 +130,8 @@ export async function POST(request) {
         );
       }
     }
-
+    console.log('taskId:', taskId);
+    console.log('key:', key);
     // STEP 4: Encode the taskId and key
     const encoded = encode(taskId, key);
 

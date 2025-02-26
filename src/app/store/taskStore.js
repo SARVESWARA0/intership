@@ -5,33 +5,32 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 const useTaskStore = create(
   persist(
     (set, get) => ({
-      // Store task assignments by email
+      // Store assignments by email.
+      // Each assignment holds { tasks, encoded, timestamp }.
       assignments: {},
       
-      // Add or update an assignment
-      setAssignment: (email, taskId, key, encoded) => 
+      // Save assignment data for an email.
+      setAssignment: (email, tasks, encoded) => 
         set((state) => ({
           assignments: {
             ...state.assignments,
-            [email]: { taskId, key, encoded, timestamp: Date.now() }
+            [email]: { tasks, encoded, timestamp: Date.now() }
           }
         })),
       
-      // Get assignment by email
+      // Retrieve assignment for an email.
       getAssignment: (email) => {
         const state = get();
         return state.assignments[email] || null;
       },
       
-      // Clear a specific assignment
-      clearAssignment: (email) => 
+      clearAssignment: (email) =>
         set((state) => {
           const newAssignments = { ...state.assignments };
           delete newAssignments[email];
           return { assignments: newAssignments };
         }),
       
-      // Clear all assignments
       clearAllAssignments: () => set({ assignments: {} }),
     }),
     {
