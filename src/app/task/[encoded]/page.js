@@ -54,7 +54,7 @@ export default function TaskPage() {
       try {
         const { password: cachedPassword } = decode(encodedDecoded);
         setPassword(cachedPassword);
-      } catch (error) {
+      } catch {
         setPassword('');
       }
       setLoading(false);
