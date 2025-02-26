@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Buffer } from 'buffer';
-import { notFound } from 'next/navigation';
+
 import ClientTaskContent from '../../components/ClientTaskContent';
 import useTaskStore from '@/app/store/taskStore';
 
