@@ -8,8 +8,6 @@ export async function getTask(taskId) {
   }
 
   try {
-
-
     const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('app1LJNvLgSJaHCgU');
 
     const tasks = await new Promise((resolve, reject) => {
@@ -27,7 +25,7 @@ export async function getTask(taskId) {
           }
         });
     });
-   console.log('tasks:', tasks);
+    
     return tasks.length > 0 ? tasks[0] : null;
   } catch (error) {
     console.error('Airtable fetch error:', error);
@@ -37,25 +35,26 @@ export async function getTask(taskId) {
 
 // Handle POST request
 export async function POST(request) {
-  try {
-    const { taskId } = await request.json();
-
-    if (!taskId) {
-      return NextResponse.json({ error: 'Task ID is required' }, { status: 400 });
+    try {
+      const { taskId } = await request.json();
+  
+      if (!taskId) {
+        return NextResponse.json({ error: 'Task ID is required' }, { status: 400 });
+      }
+  
+      const task = await getTask(taskId);
+  
+      if (!task) {
+        return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+      }
+  
+      console.log('Task fetched:', task.fields);
+      return NextResponse.json({ fields: task.fields });
+    } catch (error) {
+      console.error('API route error:', error);
+      return NextResponse.json(
+        { error: 'Internal server error', details: error.message },
+        { status: 500 }
+      );
     }
-
-    const task = await getTask(taskId);
-
-    if (!task) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-    }
-
-    return NextResponse.json({ task: task.fields });
-  } catch (error) {
-    console.error('API route error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
-      { status: 500 }
-    );
   }
-}
