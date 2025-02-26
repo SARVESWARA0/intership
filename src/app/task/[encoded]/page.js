@@ -152,7 +152,7 @@ export default function TaskPage() {
     return (
       <div className="text-center p-5">
         <h1>Task Not Found</h1>
-        <p>We couldn't find the requested task. Please check the URL and try again.</p>
+        <p>We couldn&apos;t find the requested task. Please check the URL and try again.</p>
       </div>
     );
   }
