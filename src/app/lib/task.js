@@ -3,12 +3,14 @@ import { NextResponse } from 'next/server';
 
 // Fetch task from Airtable
 export async function getTask(taskId) {
-  
+  if (!process.env.AIRTABLE_API_KEY) {
+    throw new Error('AIRTABLE_API_KEY is not configured');
+  }
 
   try {
-    console.log('Fetching from Airtable with taskId:', taskId);
 
-    const base = new Airtable({ apiKey:'patMNwpxZNZleZ51R.2e63c3eaedcf9dfa42de31401d823dcdb910d95543ee77e9a20e71dc9e12e2b5' }).base('app1LJNvLgSJaHCgU');
+
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('app1LJNvLgSJaHCgU');
 
     const tasks = await new Promise((resolve, reject) => {
       base('Task')
@@ -25,8 +27,8 @@ export async function getTask(taskId) {
           }
         });
     });
-   console.log('tasks1:', tasks);
-    return tasks;
+   console.log('tasks:', tasks);
+    return tasks.length > 0 ? tasks[0] : null;
   } catch (error) {
     console.error('Airtable fetch error:', error);
     throw error;
@@ -47,7 +49,7 @@ export async function POST(request) {
     if (!task) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
-    
+
     return NextResponse.json({ task: task.fields });
   } catch (error) {
     console.error('API route error:', error);

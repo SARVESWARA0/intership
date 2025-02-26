@@ -1,5 +1,5 @@
 "use client"
-import React, { useState} from "react"
+import React, { useState, useEffect } from "react"
 import { Copy, LinkIcon, BookOpen, CheckCircle, Clock, Tag, Info, Lock, ChevronDown, ChevronUp } from 'lucide-react'
 import styles from "./TaskDisplay.module.css"
 
@@ -118,14 +118,17 @@ function SecretKeyDisplay({ password }) {
   )
 }
 
-export default function ClientTaskContent(props) {
-  // Accept both a singular "task" prop or a "tasks" array.
-  let { task, taskId, password, tasks } = props
+export default function ClientTaskContent({ task, taskId, password }) {
+  const [isScrolled, setIsScrolled] = useState(false)
 
-  if (!task && tasks && tasks.length > 0) {
-    task = tasks[0]
-    taskId = task.taskId
-  }
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (!task) {
     return (
@@ -142,9 +145,10 @@ export default function ClientTaskContent(props) {
 
   return (
     <div className={styles.pageContainer}>
-      <div className={`${styles.taskCard}`}>
+      <div className={`${styles.taskCard} ${isScrolled ? styles.scrolled : ''}`}>
         <div className={styles.taskHeader}>
           <div className={styles.taskHeaderContent}>
+            {/* Removed shimmer class from title */}
             <h1 className={styles.taskTitle}>{task.title}</h1>
             <span className={styles.taskId}>Task #{taskId}</span>
           </div>
