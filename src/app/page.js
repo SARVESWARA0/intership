@@ -39,17 +39,17 @@ export default function LoginPage() {
         throw new Error("Server responded with an error.");
       }
 
-      // Try to parse the response as JSON
+      // Attempt to parse the response as JSON.
       let data;
       try {
         data = await response.json();
-      } catch (jsonError) {
+      } catch (_jsonError) {
         const text = await response.text();
         console.error("Response was not valid JSON:", text);
         throw new Error("Invalid JSON response from server.");
       }
 
-      // Check the API response using "exists" rather than "success"
+      // Check the API response using "exists"
       if (data.exists) {
         setAlert({ type: "success", message: "Login successful! Redirecting..." });
         setTimeout(() => {
@@ -87,13 +87,13 @@ export default function LoginPage() {
           <div className="logoBox">
             <Image
               src="/logo.png"
-              alt="Crayon'd Logo"
+              alt="Crayon&apos;d Logo"
               width={40}
               height={40}
               style={{ objectFit: "contain" }}
             />
           </div>
-          <p className="loginHeading">Crayon'd Gen AI Internship</p>
+          <p className="loginHeading">Crayon&apos;d Gen AI Internship</p>
         </div>
 
         <div className="inputFieldWrapper">
