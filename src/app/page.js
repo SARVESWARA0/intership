@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export let emailmain = null;
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -23,7 +21,8 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-    emailmain = email;
+    // Set global variable using globalThis instead of an export.
+    globalThis.emailmain = email;
 
     try {
       const response = await fetch("/api/validate-email", {
@@ -32,14 +31,12 @@ export default function LoginPage() {
         body: JSON.stringify({ email }),
       });
 
-      // If the response is not OK, log its text for debugging
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Non-OK response:", errorText);
         throw new Error("Server responded with an error.");
       }
 
-      // Attempt to parse the response as JSON.
       let data;
       try {
         data = await response.json();
@@ -49,7 +46,6 @@ export default function LoginPage() {
         throw new Error("Invalid JSON response from server.");
       }
 
-      // Check the API response using "exists"
       if (data.exists) {
         setAlert({ type: "success", message: "Login successful! Redirecting..." });
         setTimeout(() => {
