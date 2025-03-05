@@ -11,6 +11,9 @@ const useTaskStore = create(
       // Store full task data by taskId
       tasks: {},
       
+      // Store task progress by taskId
+      taskProgress: {},
+      
       // Add or update an assignment
       setAssignment: (email, taskId, key, encoded) => 
         set((state) => ({
@@ -41,6 +44,21 @@ const useTaskStore = create(
         return state.tasks[taskId]?.data || null;
       },
       
+      // Set progress for a task
+      setTaskProgress: (taskId, progress) => 
+        set((state) => ({
+          taskProgress: {
+            ...state.taskProgress,
+            [taskId]: progress
+          }
+        })),
+      
+      // Get progress for a task
+      getTaskProgress: (taskId) => {
+        const state = get();
+        return state.taskProgress[taskId] || 0;
+      },
+      
       // Check if task exists and is not stale (optional: add expiry logic)
       hasValidTask: (taskId, maxAge = 86400000) => { // Default: 24 hours
         const state = get();
@@ -68,14 +86,25 @@ const useTaskStore = create(
           return { tasks: newTasks };
         }),
       
+      // Clear progress for a specific task
+      clearTaskProgress: (taskId) => 
+        set((state) => {
+          const newTaskProgress = { ...state.taskProgress };
+          delete newTaskProgress[taskId];
+          return { taskProgress: newTaskProgress };
+        }),
+      
       // Clear all assignments
       clearAllAssignments: () => set({ assignments: {} }),
       
       // Clear all tasks
       clearAllTasks: () => set({ tasks: {} }),
       
+      // Clear all task progress
+      clearAllTaskProgress: () => set({ taskProgress: {} }),
+      
       // Clear everything
-      clearAll: () => set({ assignments: {}, tasks: {} }),
+      clearAll: () => set({ assignments: {}, tasks: {}, taskProgress: {} }),
     }),
     {
       name: 'task-assignment-storage',

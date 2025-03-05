@@ -81,50 +81,49 @@ export default function TaskPage() {
               password: decodedPassword
             });
             setIsLoading(false);
-            return;
           }
-        }
-        
-        // Fetch from API if not in store
-        console.log('Fetching task from API');
-        const res = await fetch('/api/tasks', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ taskId })
-        });
-
-        if (!res.ok) {
-          throw new Error(`Failed to fetch task: ${res.status}`);
-        }
-        
-        const data = await res.json();
-        
-        // Ensure we have the correct data structure
-        task = data.fields || data.task?.fields || data;
-        
-        if (!task) {
-          throw new Error('Invalid task data structure received from API');
-        }
-        
-        // Store the fetched task in our store for future use
-        setTask(taskId, task);
-        
-        // Store the assignment for this user
-        setAssignment(dummyEmail, taskId, 'someKey', encoded);
-        
-        if (isMounted) {
-          setTaskData({
-            task,
-            taskId,
-            password: decodedPassword
+        } else {
+          // Only fetch from API if not in store
+          console.log('Fetching task from API');
+          const res = await fetch('/api/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ taskId })
           });
+
+          if (!res.ok) {
+            throw new Error(`Failed to fetch task: ${res.status}`);
+          }
+          
+          const data = await res.json();
+          
+          // Ensure we have the correct data structure
+          task = data.fields || data.task?.fields || data;
+          
+          if (!task) {
+            throw new Error('Invalid task data structure received from API');
+          }
+          
+          // Store the fetched task in our store for future use
+          setTask(taskId, task);
+          
+          // Store the assignment for this user
+          setAssignment(dummyEmail, taskId, 'someKey', encoded);
+          
+          if (isMounted) {
+            setTaskData({
+              task,
+              taskId,
+              password: decodedPassword
+            });
+            setIsLoading(false);
+          }
         }
       } catch (err) {
         console.error('Error loading task:', err);
         if (isMounted) {
           setError(err.message);
         }
-      } finally {
         if (isMounted) {
           setIsLoading(false);
         }

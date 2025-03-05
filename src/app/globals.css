@@ -1,41 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Global font and reset */
 :root {
-  color-scheme: light dark;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: #f3f4f6;
-  color: #1f2937;
+  font-family: 'Poppins', sans-serif;
 }
 
-.dark body {
-  background: #111827;
-  color: #f3f4f6;
+/* 
+  Main container for the login page with 
+  a gradient background from #2D336B to #7886C7
+*/
+.loginContainer {
+  @apply min-h-screen w-full flex items-center justify-center p-6;
+  background: linear-gradient(to bottom right, #2D336B, #7886C7);
+  font-family: 'Poppins', sans-serif;
 }
 
-* {
-  box-sizing: border-box;
+/* The white card */
+.loginCard {
+  @apply bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-auto border relative overflow-hidden;
+  border-color: #7886C7;
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
+/* Decorative circles */
+.circleTopRight {
+  @apply absolute -top-10 -right-10 w-40 h-40 bg-[#EEF2FF] rounded-full opacity-70;
 }
 
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+.circleBottomLeft {
+  @apply absolute -bottom-10 -left-10 w-32 h-32 bg-[#EEF2FF] rounded-full opacity-70;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Logo + heading container */
+.logoContainer {
+  @apply flex flex-col items-center mb-8 relative;
 }
 
+.logoBox {
+  @apply w-fit h-fit flex items-center justify-center mb-3 bg-white p-2 rounded-lg shadow-sm;
+}
+
+/* Heading text under the logo */
+.loginHeading {
+  @apply text-lg font-semibold mt-2;
+  color: #2D336B;
+}
+
+/* Field wrapper for icon + input */
+.inputFieldWrapper {
+  @apply relative flex items-center mb-6;
+}
+
+/* Larger icon size */
+.inputIcon {
+  @apply absolute left-3 text-[#7886C7] h-6 w-6;
+}
+
+/* Input styling */
+.loginInput {
+  @apply bg-[#EEF2FF] border border-[#A9B5DF] rounded-lg pl-10 pr-4 py-3 w-full outline-none;
+  @apply focus:border-[#7886C7] focus:ring-2 focus:ring-[#7886C7] transition-all duration-200 text-gray-700;
+  @apply placeholder:text-[#7886C7];
+}
+
+/* Login button */
+#loginButton {
+  @apply w-full bg-[#2D336B] text-white font-semibold rounded-lg py-3 px-4 mt-4 hover:bg-[#7886C7] active:bg-[#2D336B];
+  @apply transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#7886C7] focus:ring-offset-2 tracking-wide shadow-md;
+}
+
+/* Alert container (if needed for top-right alerts) */
+.alertContainer {
+  @apply fixed top-5 right-5 z-50 max-w-sm;
+}
+
+.alertMessage {
+  @apply px-4 py-2 rounded shadow;
+}
+
+.alertSuccess {
+  @apply bg-green-100 text-green-700;
+}
+
+.alertError {
+  @apply bg-red-100 text-red-700;
+}
