@@ -43,7 +43,7 @@ export default function LoginPage() {
       let data;
       try {
         data = await response.json();
-      } catch (_jsonError) {
+      } catch {
         const text = await response.text();
         console.error("Response was not valid JSON:", text);
         throw new Error("Invalid JSON response from server.");
