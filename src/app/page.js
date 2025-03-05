@@ -1,14 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import useTaskStore from "../app/store/taskStore"; // adjust path as necessary
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [alert, setAlert] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Retrieve login state and setter from your Zustand store
+  const { isLoggedIn, encodedValue, setLoginData } = useTaskStore();
+
+  // Check if the user is already logged in on component mount
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push(`/task/${encodeURIComponent(encodedValue)}`);
+    }
+  }, [isLoggedIn, encodedValue, router]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -21,7 +32,6 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-    // Set global variable using globalThis instead of an export.
     globalThis.emailmain = email;
 
     try {
@@ -47,6 +57,8 @@ export default function LoginPage() {
       }
 
       if (data.exists) {
+        // Update the Zustand store: set login flag and encoded value
+        setLoginData(email, data.encoded);
         setAlert({ type: "success", message: "Login successful! Redirecting..." });
         setTimeout(() => {
           router.push(`/task/${encodeURIComponent(data.encoded)}`);

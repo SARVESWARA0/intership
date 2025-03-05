@@ -14,6 +14,13 @@ const useTaskStore = create(
       // Store task progress by taskId
       taskProgress: {},
       
+      // New login flag and encoded value
+      isLoggedIn: false,
+      encodedValue: "",
+      
+      // Set login data (flag and encodedValue)
+      setLoginData: (email, encoded) => set({ isLoggedIn: true, encodedValue: encoded }),
+      
       // Add or update an assignment
       setAssignment: (email, taskId, key, encoded) => 
         set((state) => ({
@@ -64,8 +71,6 @@ const useTaskStore = create(
         const state = get();
         const taskEntry = state.tasks[taskId];
         if (!taskEntry) return false;
-        
-        // Check if task is stale
         const now = Date.now();
         return (now - taskEntry.timestamp) < maxAge;
       },
