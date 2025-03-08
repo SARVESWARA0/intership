@@ -362,9 +362,12 @@
   padding: 1.5rem;
   border-left: 4px solid #3b82f6;
   position: relative;
-  overflow: hidden;
+  height: 400px;         /* Set a fixed height */
+  overflow-y: auto;      /* Enable vertical scrolling */
   transition: all 0.3s ease;
 }
+
+
 
 .instructionsSection:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -448,7 +451,41 @@
   height: 16px;
   transition: transform 0.3s ease;
 }
+/* Add these styles to TaskDisplay.module.css */
 
+.instructionHeading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2563eb;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.instructionSubheading {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.listItem {
+  display: flex;
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.bulletPoint {
+  display: inline-block;
+  margin-right: 0.5rem;
+  color: #3b82f6;
+}
+
+.textLine {
+  margin-bottom: 0.5rem;
+}
 .link:hover {
   color: #1d4ed8;
 }

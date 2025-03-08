@@ -25,7 +25,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     // Basic client-side email validation
-    const emailRegex = /^\S+@\S+\.\S+$/;
+    const emailRegex = /@/;
     if (!emailRegex.test(email)) {
       setAlert({ type: "error", message: "Please enter a valid email address." });
       return;

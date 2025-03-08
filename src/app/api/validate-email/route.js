@@ -62,7 +62,6 @@ export async function POST(request) {
 
     // Validate only if status is "registered" or "assigned"
     if (candidateStatus !== 'registered' && candidateStatus !== 'assigned') {
-      // For example, if status is "completed" or any other, return exists false.
       return new Response(
         JSON.stringify({ exists: false }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
@@ -119,6 +118,24 @@ export async function POST(request) {
           }
         );
       });
+
+      // STEP 4a: Add the candidate's name, email, and taskId to the data table
+      await new Promise((resolve, reject) => {
+        base('data').create(
+          {
+            name: candidateRecord.get('name'), // Make sure the candidate record contains a "name" field
+            email: email,
+            taskId: taskId,
+          },
+          (err, record) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(record);
+            }
+          }
+        );
+      });
     } else if (candidateStatus === 'assigned') {
       // STEP 2b: For an assigned candidate, simply fetch the stored taskId and key
       taskId = candidateRecord.get('taskId');
@@ -130,12 +147,13 @@ export async function POST(request) {
         );
       }
     }
+
     console.log('taskId:', taskId);
     console.log('key:', key);
-    // STEP 4: Encode the taskId and key
+    // STEP 5: Encode the taskId and key
     const encoded = encode(taskId, key);
 
-    // Return the encoded string to the landing page along with task info for caching
+    // Return the encoded string along with task info
     return new Response(
       JSON.stringify({ 
         exists: true, 
