@@ -462,15 +462,22 @@ export default function ClientTaskContent({ task, taskId, password }) {
           </CollapsibleSection>
           
           {task.resources && (
-            <CollapsibleSection 
-              title="Resources" 
-              icon={<LinkIcon className={styles.sectionIcon} size={24} />}
-            >
-              <div className={styles.resourcesContent}>
-                {convertResourceLinksToJSX(task.resources)}
-              </div>
-            </CollapsibleSection>
-          )}
+  <CollapsibleSection 
+    title="Resources" 
+    icon={<LinkIcon className={styles.sectionIcon} size={24} />}
+  >
+    <div className={styles.resourceStaticInfo}>
+        Use two tool calling for the specific usecase to get the realtime data or data from database which were assigned to you.
+      </div>
+    <div className={styles.resourcesContent}>
+      {/* Static info inside the blue box */}
+      
+      {convertResourceLinksToJSX(task.resources)}
+    </div>
+  </CollapsibleSection>
+)}
+
+
 
           <div className={styles.taskMeta}>
             {task.dueDate && (
