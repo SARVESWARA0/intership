@@ -71,41 +71,18 @@ export async function POST(request) {
     let taskId, key;
 
     if (candidateStatus === 'registered') {
-      // STEP 2a: For a registered candidate, fetch tasks and select one randomly
-      const tasks = await new Promise((resolve, reject) => {
-        base('Task')
-          .select({ view: 'Grid view' })
-          .firstPage((err, records) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(records);
-            }
-          });
-      });
-
-      if (!tasks || tasks.length === 0) {
-        return new Response(
-          JSON.stringify({ error: 'No tasks available' }),
-          { status: 500, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-
-      const randomIndex = Math.floor(Math.random() * tasks.length);
-      const randomTask = tasks[randomIndex];
-      taskId = randomTask.get('taskId'); // Assumes your field is named "taskId"
+      // For a registered candidate, generate and assign a new password (key)
       key = generateRandomKey(8);
 
-      // STEP 3a: Update the candidate record with the new taskId, key and update status to "assigned"
+      // Update the candidate record with the new key (password)
       await new Promise((resolve, reject) => {
         base('Candidate').update(
           [
             {
               id: candidateRecordId,
               fields: {
-                taskId: taskId,
                 key: key,
-                status: 'assigned',
+                status:"assigned"
               },
             },
           ],
@@ -119,7 +96,14 @@ export async function POST(request) {
         );
       });
 
-      // STEP 4a: Add the candidate's name, email, and taskId to the data table
+      // Fetch the taskId from the candidate record
+      taskId = candidateRecord.get('taskId');
+      if (!taskId) {
+        return new Response(
+          JSON.stringify({ error: 'Registered candidate missing task details' }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
       await new Promise((resolve, reject) => {
         base('data').create(
           {
