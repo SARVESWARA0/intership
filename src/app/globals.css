@@ -4,11 +4,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global font and reset */
+/* Define new colour palette as CSS variables */
 :root {
   font-family: 'Poppins', sans-serif;
+  /* Brand Color (Indigo) */
+  --indigo-50: #EEF2FF;
+  --indigo-100: #E0E7FF;
+  --indigo-200: #C7D2FE;
+  --indigo-300: #A5B4FC;
+  --indigo-400: #818CF8;
+  --indigo-500: #6366F1; /* Primary */
+  --indigo-600: #4F46E5;
+  --indigo-700: #4338CA;
+  --indigo-800: #3730A3;
+  --indigo-900: #312E81;
+  --indigo-950: #1E1B4B;
+
+  /* Neutral Color (Slate) */
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --slate-950: #020617;
 }
 
+/* Global font and reset */
 body {
   margin: 0;
   padding: 0;
@@ -17,27 +43,26 @@ body {
 
 /* 
   Main container for the login page with 
-  a gradient background from #2D336B to #7886C7
+  a gradient background using Indigo shades
 */
 .loginContainer {
   @apply min-h-screen w-full flex items-center justify-center p-6;
-  background: linear-gradient(to bottom right, #2D336B, #7886C7);
-  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, var(--indigo-900), var(--indigo-500));
 }
 
-/* The white card */
+/* The white card with updated border using Indigo primary */
 .loginCard {
   @apply bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-auto border relative overflow-hidden;
-  border-color: #7886C7;
+  border-color: var(--indigo-500);
 }
 
-/* Decorative circles */
+/* Decorative circles using Indigo-50 */
 .circleTopRight {
-  @apply absolute -top-10 -right-10 w-40 h-40 bg-[#EEF2FF] rounded-full opacity-70;
+  @apply absolute -top-10 -right-10 w-40 h-40 bg-[var(--indigo-50)] rounded-full opacity-70;
 }
 
 .circleBottomLeft {
-  @apply absolute -bottom-10 -left-10 w-32 h-32 bg-[#EEF2FF] rounded-full opacity-70;
+  @apply absolute -bottom-10 -left-10 w-32 h-32 bg-[var(--indigo-50)] rounded-full opacity-70;
 }
 
 /* Logo + heading container */
@@ -49,10 +74,10 @@ body {
   @apply w-fit h-fit flex items-center justify-center mb-3 bg-white p-2 rounded-lg shadow-sm;
 }
 
-/* Heading text under the logo */
+/* Heading text under the logo, now using a deep Indigo shade */
 .loginHeading {
   @apply text-lg font-semibold mt-2;
-  color: #2D336B;
+  color: var(--indigo-900);
 }
 
 /* Field wrapper for icon + input */
@@ -60,22 +85,22 @@ body {
   @apply relative flex items-center mb-6;
 }
 
-/* Larger icon size */
+/* Larger icon size, using Indigo-400 */
 .inputIcon {
-  @apply absolute left-3 text-[#7886C7] h-6 w-6;
+  @apply absolute left-3 text-[var(--indigo-400)] h-6 w-6;
 }
 
-/* Input styling */
+/* Input styling with Indigo colours */
 .loginInput {
-  @apply bg-[#EEF2FF] border border-[#A9B5DF] rounded-lg pl-10 pr-4 py-3 w-full outline-none;
-  @apply focus:border-[#7886C7] focus:ring-2 focus:ring-[#7886C7] transition-all duration-200 text-gray-700;
-  @apply placeholder:text-[#7886C7];
+  @apply bg-[var(--indigo-50)] border border-[var(--indigo-200)] rounded-lg pl-10 pr-4 py-3 w-full outline-none;
+  @apply focus:border-[var(--indigo-500)] focus:ring-2 focus:ring-[var(--indigo-500)] transition-all duration-200 text-gray-700;
+  @apply placeholder:text-[var(--indigo-400)];
 }
 
-/* Login button */
+/* Login button updated with Indigo colours */
 #loginButton {
-  @apply w-full bg-[#2D336B] text-white font-semibold rounded-lg py-3 px-4 mt-4 hover:bg-[#7886C7] active:bg-[#2D336B];
-  @apply transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#7886C7] focus:ring-offset-2 tracking-wide shadow-md;
+  @apply w-full bg-[var(--indigo-900)] text-white font-semibold rounded-lg py-3 px-4 mt-4 hover:bg-[var(--indigo-700)] active:bg-[var(--indigo-900)];
+  @apply transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--indigo-700)] focus:ring-offset-2 tracking-wide shadow-md;
 }
 
 /* Alert container (if needed for top-right alerts) */
