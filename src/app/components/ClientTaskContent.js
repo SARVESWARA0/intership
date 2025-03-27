@@ -325,13 +325,13 @@ Complete and test all components within 5 days.
 
 export default function ClientTaskContent({ task, taskId, password }) {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [showConfetti, setShowConfetti] = useState(false)
+  const [showConfetti] = useState(false)
   const [showInstructionsPopup, setShowInstructionsPopup] = useState(false)
 
   // Use Zustand to get and set progress
   const getTaskProgress = useTaskStore((state) => state.getTaskProgress)
-  const setTaskProgress = useTaskStore((state) => state.setTaskProgress)
-  const [progress, setProgress] = useState(0)
+  
+  const [ setProgress] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
