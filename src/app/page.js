@@ -38,7 +38,7 @@ export default function LoginPage() {
       const response = await fetch("/api/validate-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.toLowerCase()}),
       });
 
       if (!response.ok) {
