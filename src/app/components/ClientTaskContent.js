@@ -15,7 +15,6 @@ import {
   X,
 } from "lucide-react"
 import styles from "./TaskDisplay.module.css"
-import useTaskStore from "../store/taskStore" // Import the task store
 
 function isValidUrl(string) {
   try {
@@ -29,7 +28,6 @@ function isValidUrl(string) {
 function convertLinksToJSX(text) {
   if (!text) return null
 
-  // Split the text by lines
   const lines = text.split("\n")
   const result = []
 
@@ -42,9 +40,8 @@ function convertLinksToJSX(text) {
       continue
     }
 
-    // Check for markdown headings
+    // Markdown headings
     if (line.trim().startsWith("##")) {
-      // Count the number of # to determine heading level
       const headingLevel = line.trim().match(/^#{2,6}/)[0].length
       const headingText = line.trim().replace(/^#{2,6}\s*/, "")
 
@@ -52,19 +49,19 @@ function convertLinksToJSX(text) {
         result.push(
           <div key={`heading-${i}`} className={styles.instructionHeading}>
             {headingText}
-          </div>,
+          </div>
         )
       } else if (headingLevel === 3) {
         result.push(
           <div key={`subheading-${i}`} className={styles.instructionSubheading}>
             {headingText}
-          </div>,
+          </div>
         )
       }
       continue
     }
 
-    // Check for list items
+    // List items
     if (line.trim().startsWith("- ")) {
       const listItemContent = line.trim().substring(2)
       const parts = listItemContent.split(/(https?:\/\/[^\s]+)/)
@@ -90,12 +87,12 @@ function convertLinksToJSX(text) {
         <div key={`list-item-${i}`} className={styles.listItem}>
           <span className={styles.bulletPoint}>•</span>
           <span>{formattedParts}</span>
-        </div>,
+        </div>
       )
       continue
     }
 
-    // Regular line - check for URLs
+    // Regular lines with URL checking
     const parts = line.split(/(https?:\/\/[^\s]+)/)
     const formattedParts = parts.map((part, partIndex) => {
       if (isValidUrl(part)) {
@@ -118,7 +115,7 @@ function convertLinksToJSX(text) {
     result.push(
       <div key={`line-${i}`} className={styles.textLine}>
         {formattedParts}
-      </div>,
+      </div>
     )
   }
 
@@ -131,7 +128,6 @@ function convertResourceLinksToJSX(text) {
   return text.split("\n").map((line, index) => {
     if (line.trim() === "") return <br key={index} />
 
-    // Check if line starts with a heading (ends with ':')
     if (line.trim().endsWith(":")) {
       return (
         <div key={index} className={styles.resourceHeading}>
@@ -204,10 +200,7 @@ function CollapsibleSection({ title, icon, children }) {
 function SecretKeyDisplay({ password }) {
   const [showPassword] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-  })
+  const [toast, setToast] = useState({ show: false, message: "" })
   const [isHovered, setIsHovered] = useState(false)
 
   const handleCopy = async () => {
@@ -216,7 +209,6 @@ function SecretKeyDisplay({ password }) {
       setCopied(true)
       setToast({ show: true, message: "Copied to clipboard" })
 
-      // Copy animation
       const container = document.createElement("div")
       container.style.position = "fixed"
       container.style.top = "0"
@@ -293,8 +285,6 @@ function SecretKeyDisplay({ password }) {
   )
 }
 
-
-
 const defaultInstructions = `
 ## Instructions
 
@@ -325,13 +315,7 @@ Complete and test all components within 5 days.
 
 export default function ClientTaskContent({ task, taskId, password }) {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [showConfetti] = useState(false)
   const [showInstructionsPopup, setShowInstructionsPopup] = useState(false)
-
-  // Use Zustand to get and set progress
-  const getTaskProgress = useTaskStore((state) => state.getTaskProgress)
-  
-  const [ setProgress] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -340,13 +324,6 @@ export default function ClientTaskContent({ task, taskId, password }) {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  useEffect(() => {
-    const savedProgress = getTaskProgress(taskId) || 0
-    setProgress(savedProgress)
-  }, [taskId, getTaskProgress])
-
-  
 
   if (!task) {
     return (
@@ -359,7 +336,6 @@ export default function ClientTaskContent({ task, taskId, password }) {
     )
   }
 
-  // Inline Instructions Popup (modal)
   const instructionsModal = showInstructionsPopup && (
     <div
       className={styles.modalOverlay}
@@ -391,7 +367,6 @@ export default function ClientTaskContent({ task, taskId, password }) {
 
   return (
     <div className={styles.pageContainer}>
-      {showConfetti && <div className={styles.confetti}></div>}
       <div className={`${styles.taskCard} ${isScrolled ? styles.scrolled : ""}`}>
         <div className={styles.taskHeader}>
           <div className={styles.taskHeaderContent}>
@@ -400,10 +375,6 @@ export default function ClientTaskContent({ task, taskId, password }) {
               <div className={styles.taskBadges}>
                 <span className={styles.taskId}>Task #{taskId}</span>
               </div>
-            </div>
-            <div className={styles.progressSection}>
-              
-               
             </div>
           </div>
         </div>
