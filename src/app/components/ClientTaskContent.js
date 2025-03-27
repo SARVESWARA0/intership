@@ -346,13 +346,7 @@ export default function ClientTaskContent({ task, taskId, password }) {
     setProgress(savedProgress)
   }, [taskId, getTaskProgress])
 
-  const celebrateProgress = () => {
-    setShowConfetti(true)
-    setTimeout(() => setShowConfetti(false), 3000)
-    const newProgress = Math.min(100, progress + 10)
-    setProgress(newProgress)
-    setTaskProgress(taskId, newProgress)
-  }
+  
 
   if (!task) {
     return (
