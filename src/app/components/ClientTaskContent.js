@@ -1,172 +1,152 @@
-"use client"
-import { useState, useEffect } from "react"
+"use client";
+import { useState, useEffect } from "react";
 import {
   Copy,
-  LinkIcon,
   BookOpen,
   CheckCircle,
-  Clock,
-  Tag,
   Info,
   Lock,
   ChevronDown,
   ChevronUp,
   Award,
-  X,
-} from "lucide-react"
-import styles from "./TaskDisplay.module.css"
+} from "lucide-react";
+import styles from "./TaskDisplay.module.css";
 
 function isValidUrl(string) {
   try {
-    new URL(string)
-    return true
+    new URL(string);
+    return true;
   } catch {
-    return false
+    return false;
   }
 }
 
-function convertLinksToJSX(text) {
-  if (!text) return null
+function replaceTechStackNames(text, techStackItems = []) {
+  if (!text) return null;
+  if (!techStackItems || techStackItems.length === 0) return text;
+  const techStackMap = techStackItems.reduce((acc, item) => {
+    acc[item.name] = item.url;
+    return acc;
+  }, {});
+  const namesPattern = Object.keys(techStackMap).join("|");
+  const regex = new RegExp(`\\b(${namesPattern})\\b`, "g");
+  const parts = text.split(regex);
+  return parts.map((part, index) => {
+    if (techStackMap[part]) {
+      return (
+        <a
+          key={index}
+          href={techStackMap[part]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="tech-stack-link"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
 
-  const lines = text.split("\n")
-  const result = []
+// Enhanced converter that recognizes markdown headings (#, ##, ###) and lists
+function convertLinksToJSX(text, techStackItems = []) {
+  if (!text) return null;
+  const lines = text.split("\n");
+  const result = [];
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-
-    // Empty line
-    if (line.trim() === "") {
-      result.push(<br key={`br-${i}`} />)
-      continue
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (trimmed === "") {
+      result.push(<br key={`br-${i}`} />);
+      return;
     }
 
-    // Markdown headings
-    if (line.trim().startsWith("##")) {
-      const headingLevel = line.trim().match(/^#{2,6}/)[0].length
-      const headingText = line.trim().replace(/^#{2,6}\s*/, "")
-
-      if (headingLevel === 2) {
+    // Handle headings: # for main heading, ## for subheading, ### for section titles
+    if (/^#{1,3}\s/.test(trimmed)) {
+      const match = trimmed.match(/^(#{1,3})\s(.*)/);
+      if (match) {
+        const level = match[1].length;
+        const headingText = match[2];
+        let headingClass = styles.instructionHeading;
+        if (level === 2) {
+          headingClass = styles.instructionSubheading;
+        } else if (level === 3) {
+          headingClass = styles.instructionSection;
+        }
         result.push(
-          <div key={`heading-${i}`} className={styles.instructionHeading}>
+          <div key={`heading-${i}`} className={headingClass}>
             {headingText}
           </div>
-        )
-      } else if (headingLevel === 3) {
-        result.push(
-          <div key={`subheading-${i}`} className={styles.instructionSubheading}>
-            {headingText}
-          </div>
-        )
+        );
+        return;
       }
-      continue
     }
 
-    // List items
-    if (line.trim().startsWith("- ")) {
-      const listItemContent = line.trim().substring(2)
-      const parts = listItemContent.split(/(https?:\/\/[^\s]+)/)
-      const formattedParts = parts.map((part, partIndex) => {
+    // Handle list items (lines starting with "- ")
+    if (trimmed.startsWith("- ")) {
+      const listItemContent = trimmed.substring(2);
+      const parts = listItemContent.split(/(https?:\/\/[^\s]+)/);
+      const formattedParts = parts.map((part, j) => {
         if (isValidUrl(part)) {
-          if (part.includes("alphavantage.co")) {
-            return (
-              <span key={partIndex} className={styles.link}>
-                {part}
-              </span>
-            )
-          }
           return (
-            <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer" className={styles.link}>
+            <a
+              key={j}
+              href={part}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
               {part}
             </a>
-          )
+          );
         }
-        return part
-      })
-
+        return replaceTechStackNames(part, techStackItems);
+      });
       result.push(
-        <div key={`list-item-${i}`} className={styles.listItem}>
+        <div key={`list-${i}`} className={styles.listItem}>
           <span className={styles.bulletPoint}>•</span>
           <span>{formattedParts}</span>
         </div>
-      )
-      continue
+      );
+      return;
     }
 
-    // Regular lines with URL checking
-    const parts = line.split(/(https?:\/\/[^\s]+)/)
-    const formattedParts = parts.map((part, partIndex) => {
+    // Regular text lines with link and tech stack name replacement
+    const parts = trimmed.split(/(https?:\/\/[^\s]+)/);
+    const formattedParts = parts.map((part, j) => {
       if (isValidUrl(part)) {
-        if (part.includes("alphavantage.co")) {
-          return (
-            <span key={partIndex} className={styles.link}>
-              {part}
-            </span>
-          )
-        }
         return (
-          <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer" className={styles.link}>
+          <a
+            key={j}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.link}
+          >
             {part}
           </a>
-        )
+        );
       }
-      return part
-    })
-
+      return replaceTechStackNames(part, techStackItems);
+    });
     result.push(
       <div key={`line-${i}`} className={styles.textLine}>
         {formattedParts}
       </div>
-    )
-  }
+    );
+  });
 
-  return result
-}
-
-function convertResourceLinksToJSX(text) {
-  if (!text) return null
-
-  return text.split("\n").map((line, index) => {
-    if (line.trim() === "") return <br key={index} />
-
-    if (line.trim().endsWith(":")) {
-      return (
-        <div key={index} className={styles.resourceHeading}>
-          {line}
-        </div>
-      )
-    }
-
-    const parts = line.split(/(https?:\/\/[^\s]+)/)
-    const formattedParts = parts.map((part, i) => {
-      if (isValidUrl(part)) {
-        if (part.includes("alphavantage.co")) {
-          return (
-            <span key={i} className={styles.link}>
-              {part}
-            </span>
-          )
-        }
-        return (
-          <a key={i} href={part} target="_blank" rel="noopener noreferrer" className={styles.link}>
-            {part}
-          </a>
-        )
-      }
-      return part
-    })
-
-    return <div key={index}>{formattedParts}</div>
-  })
+  return result;
 }
 
 function SectionTitle({ children }) {
-  return <h2 className={styles.sectionTitle}>{children}</h2>
+  return <h2 className={styles.sectionTitle}>{children}</h2>;
 }
 
-function CollapsibleSection({ title, icon, children }) {
-  const [isOpen, setIsOpen] = useState(true)
-  const [isHovered, setIsHovered] = useState(false)
-
+function CollapsibleSection({ title, icon, children, maxHeight = "1000px" }) {
+  const [isOpen, setIsOpen] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <div
       className={`${styles.section} ${isHovered ? styles.sectionHovered : ""}`}
@@ -174,7 +154,9 @@ function CollapsibleSection({ title, icon, children }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`${styles.sectionHeader} ${styles.collapsibleHeader} ${isOpen ? styles.sectionHeaderOpen : ""}`}
+        className={`${styles.sectionHeader} ${styles.collapsibleHeader} ${
+          isOpen ? styles.sectionHeaderOpen : ""
+        }`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className={styles.iconWrapper}>{icon}</div>
@@ -184,81 +166,48 @@ function CollapsibleSection({ title, icon, children }) {
         </div>
       </div>
       <div
-        className={`${styles.sectionContentWrapper} ${isOpen ? styles.contentVisible : styles.contentHidden}`}
+        className={`${styles.sectionContentWrapper} ${
+          isOpen ? styles.contentVisible : styles.contentHidden
+        }`}
         style={{
-          maxHeight: isOpen ? "1000px" : "0px",
+          maxHeight: isOpen ? maxHeight : "0px",
           opacity: isOpen ? 1 : 0,
+          overflowY: isOpen ? "auto" : "hidden",
           transition: "max-height 0.5s ease, opacity 0.5s ease",
         }}
       >
         <div className={styles.sectionContent}>{children}</div>
       </div>
     </div>
-  )
+  );
 }
 
 function SecretKeyDisplay({ password }) {
-  const [showPassword] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [toast, setToast] = useState({ show: false, message: "" })
-  const [isHovered, setIsHovered] = useState(false)
+  const [showPassword] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: "" });
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(password)
-      setCopied(true)
-      setToast({ show: true, message: "Copied to clipboard" })
-
-      const container = document.createElement("div")
-      container.style.position = "fixed"
-      container.style.top = "0"
-      container.style.left = "0"
-      container.style.width = "100%"
-      container.style.height = "100%"
-      container.style.pointerEvents = "none"
-      container.style.zIndex = "9999"
-      document.body.appendChild(container)
-
-      for (let i = 0; i < 5; i++) {
-        const element = document.createElement("div")
-        element.textContent = "✓"
-        element.style.position = "absolute"
-        element.style.color = "#10b981"
-        element.style.fontSize = "24px"
-        element.style.fontWeight = "bold"
-        element.style.top = `${50 + Math.random() * 10}%`
-        element.style.left = `${45 + Math.random() * 10}%`
-        element.style.opacity = "1"
-        element.style.transition = "transform 1s ease, opacity 1s ease"
-        container.appendChild(element)
-
-        setTimeout(() => {
-          element.style.transform = `translate(${Math.random() * 100 - 50}px, -100px)`
-          element.style.opacity = "0"
-        }, 10)
-
-        setTimeout(() => {
-          container.removeChild(element)
-        }, 1000)
-      }
-
+      await navigator.clipboard.writeText(password);
+      setCopied(true);
+      setToast({ show: true, message: "Copied to clipboard" });
       setTimeout(() => {
-        document.body.removeChild(container)
-      }, 1100)
-
-      setTimeout(() => {
-        setCopied(false)
-        setToast({ show: false, message: "" })
-      }, 2000)
+        setCopied(false);
+        setToast({ show: false, message: "" });
+      }, 2000);
     } catch (error) {
-      console.error("Copy failed:", error)
-      setToast({ show: true, message: "Failed to copy" })
+      console.error("Copy failed:", error);
+      setToast({ show: true, message: "Failed to copy" });
     }
-  }
+  };
 
   return (
     <div
-      className={`${styles.secretKeyContainer} ${isHovered ? styles.secretKeyHovered : ""}`}
+      className={`${styles.secretKeyContainer} ${
+        isHovered ? styles.secretKeyHovered : ""
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -282,48 +231,121 @@ function SecretKeyDisplay({ password }) {
       </div>
       {toast.show && <div className={styles.toast}>{toast.message}</div>}
     </div>
-  )
+  );
 }
 
+// New default instructions with proper markdown formatting and subheadings
 const defaultInstructions = `
-## Instructions
+# Core Requirements
 
-### Overview  
-- UI implementation is optional but prioritized.  
-- Focus on practical functionality with a clean, professional UI if used.  
+## AI Agent Functionality
+- Build an AI agent that solves the assigned use case problem
+- Implement persistent memory across different chat sessions using Vector DB
+- Integrate real-time data retrieval through relevant APIs based on your use case
+- Ensure the agent can recall previous interactions and use them for context in new conversations
+- Implement at least 2 use-case specific tools and 4 memory-related tools
 
-### AI Agent Requirements  
-- Develop an AI agent for a defined use case.  
-- Integrate at least 2 real-time data calls and 4 long-term memory calls (efficient and documented).  
-- Provide a brief explanation for each tool integration.  
+# Technical Requirements
+## Your agent must demonstrate both:
+a. Long-term memory: Store and retrieve conversation history and important information
+      b. Real-time knowledge: Access current data through APIs relevant to your use case
 
-### Tech Stack  
-#### LLM Providers:  
-- Gemini, Groq  
-#### Vector Databases:  
-- Pinecone, Supabase (pgvector), Neon (pgvector), Neo4J  
-#### Languages & Frameworks:  
-- Python : Use Agno or CrewAI for backend AI logic.  
-- JavaScript : Utilize Vercel AI SDK and Maestra for front-end.  
-- UI : Build with React.js, Next.js, and preferred CSS libraries.  
-#### Deployment:  
-- Vercel, Netlify, Render  
+- Document each tool integration with a brief explanation of its purpose and implementation
+- Ensure proper error handling and user experience
 
-### Deadline  
-Complete and test all components within 5 days.  
-`
+# Technology Options
 
-export default function ClientTaskContent({ task, taskId, password }) {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [showInstructionsPopup, setShowInstructionsPopup] = useState(false)
+## LLM Providers (choose one)
+- Gemini (Recommended)
+- Groq
 
+## Vector Database (choose one)
+- Pinecone (Recommended)
+- Supabase  (pgvector) (Recommended)
+- Neon (pgvector)
+- Neo4J (vector index)
+
+# Development Stack
+
+## Python Option
+- Agno (Recommended)
+- LangChain
+- CrewAI
+- LlamaIndex
+
+## JavaScript Option
+- Vercel AI SDK (Recommended)
+- Mastra.ai (Recommended)
+- LangChain
+- LlamaIndex
+
+# UI (Optional but Highly Preferred)
+- Next.js (Recommended)
+- React.js
+- Any CSS libraries of your choice
+
+# Deployment (Optional)
+- Vercel (Recommended)
+- Netlify
+- Render
+
+# Implementation Options
+
+## Option 1: With UI (Highly Preferred)
+- Develop a clean, professional user interface
+- Integrate your AI agent API with the frontend
+- Deploy the application (optional but recommended)
+
+## Option 2: Without UI
+- Demonstrate functionality through CLI or API testing tools (e.g., Postman)
+- Provide clear documentation on how to test and use your agent
+
+# Development Approach
+We recommend:
+- First focus on completing the core AI agent functionality
+- Then implement the UI and integration
+- Finally deploy the application if possible
+
+# Timeline
+-Final Submission Deadline is April 10, 2025  
+-Plan your time accordingly to ensure all core requirements are met and focus on completing core functionality first before adding additional features
+
+# Evaluation Criteria
+- Functionality of the AI agent
+- Quality of memory implementation
+- Effective use of real-time data
+- Code quality and organization
+- UI implementation
+- Deployment (optional but valued)
+`;
+
+const techStackItems = [
+  { name: "Gemini", url: "https://aistudio.google.com/prompts/new_chat" },
+  { name: "Groq", url: "https://groq.com/" },
+  { name: "Pinecone", url: "https://www.pinecone.io/" },
+  { name: "Supabase", url: "https://supabase.com/" },
+  { name: "Neon (pgvector)", url: "https://neon.tech/" },
+  { name: "Neo4J", url: "https://neo4j.com/" },
+  { name: "Agno", url: "https://www.agno.com/" },
+  { name: "LangChain", url: "https://python.langchain.com/docs/introduction/" },
+  { name: "CrewAI", url: "https://www.crewai.com/" },
+  { name: "LlamaIndex", url: "https://www.llamaindex.ai/" },
+  { name: "Vercel AI SDK", url: "https://sdk.vercel.ai/" },
+  { name: "Mastra.ai", url: "https://mastra.ai/" },
+  { name: "Next.js", url: "https://nextjs.org/" },
+  { name: "React.js", url: "https://react.dev/" },
+  { name: "Vercel", url: "https://vercel.com" },
+  { name: "Netlify", url: "https://www.netlify.com/" },
+  { name: "Render", url: "https://render.com/" },
+];
+
+export default function ClientTaskContent({ task, password }) {
+  const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   if (!task) {
     return (
@@ -333,37 +355,8 @@ export default function ClientTaskContent({ task, taskId, password }) {
           <p className={styles.notFoundText}>The requested task could not be found.</p>
         </div>
       </div>
-    )
+    );
   }
-
-  const instructionsModal = showInstructionsPopup && (
-    <div
-      className={styles.modalOverlay}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) setShowInstructionsPopup(false)
-      }}
-    >
-      <div className={styles.modalContent}>
-        <div className={styles.modalHeader}>
-          <h1 style={{ fontSize: "1.75rem", marginBottom: "0.5rem" }}>Instructions</h1>
-          <button
-            onClick={() => setShowInstructionsPopup(false)}
-            className={styles.modalCloseButton}
-            aria-label="Close"
-          >
-            <X size={20} color="white" />
-          </button>
-        </div>
-        <div className={styles.modalBody}>
-          {convertLinksToJSX(task.instructions || defaultInstructions)}
-          <div className={styles.tipBox}>
-            <Award size={16} className={styles.tipIcon} />
-            <p>Tip: Early submissions earn extra points!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
 
   return (
     <div className={styles.pageContainer}>
@@ -373,78 +366,30 @@ export default function ClientTaskContent({ task, taskId, password }) {
             <div className={styles.titleSection}>
               <h1 className={styles.taskTitle}>{task.title}</h1>
               <div className={styles.taskBadges}>
-                <span className={styles.taskId}>Task #{taskId}</span>
+                
               </div>
             </div>
           </div>
         </div>
-
         <div className={styles.taskContent}>
-          <CollapsibleSection title="Instructions" icon={<Info className={styles.sectionIcon} size={24} />}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "2rem",
-              }}
-            >
-              <button
-                className={styles.progressButton}
-                style={{
-                  padding: "0.75rem 1.5rem",
-                  fontSize: "1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  backgroundColor: "var(--indigo-500)",
-                  color: "white",
-                  borderRadius: "0.5rem",
-                  border: "none",
-                  cursor: "pointer",
-                  boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
-                  transition: "all 0.3s ease",
-                }}
-                onClick={() => setShowInstructionsPopup(true)}
-              >
-                <Info size={20} />
-                View Instructions
-              </button>
+          <CollapsibleSection title="Instructions" icon={<Info size={24} />} maxHeight="600px">
+            {convertLinksToJSX(task.instructions || defaultInstructions, techStackItems)}
+            <div className={styles.tipBox}>
+              <Award size={70} className={styles.tipIcon} />
+              <p>
+              Note: You will receive another email with a link to submit your work. High preference will be given to candidates who implement AI agent functionality with UI.</p>
             </div>
           </CollapsibleSection>
-
-          <CollapsibleSection title="Description" icon={<BookOpen className={styles.sectionIcon} size={24} />}>
-            <div className={styles.descriptionContent}>{convertLinksToJSX(task.description)}</div>
+          <CollapsibleSection title="Problem Statement" icon={<BookOpen size={24} className={styles.sectionIcon} />}>
+            <div className={styles.descriptionContent}>
+              {convertLinksToJSX(task.description, techStackItems)}
+            </div>
           </CollapsibleSection>
-
-          {task.resources && (
-            <CollapsibleSection title="Resources" icon={<LinkIcon className={styles.sectionIcon} size={24} />}>
-              <div className={styles.resourceStaticInfo}>
-                Use two tool calling for the specific usecase to get the realtime data or data from database which were
-                assigned to you.
-              </div>
-              <div className={styles.resourcesContent}>{convertResourceLinksToJSX(task.resources)}</div>
-            </CollapsibleSection>
-          )}
-
-          <div className={styles.taskMeta}>
-            {task.dueDate && (
-              <div className={`${styles.metaItem} ${styles.metaItemDue}`}>
-                <Clock size={16} className={styles.metaIcon} />
-                <span>Due: {task.dueDate}</span>
-              </div>
-            )}
-            {task.category && (
-              <div className={`${styles.metaItem} ${styles.metaItemCategory}`}>
-                <Tag size={16} className={styles.metaIcon} />
-                <span>{task.category}</span>
-              </div>
-            )}
-          </div>
-
+          
+          
           <SecretKeyDisplay password={password} />
         </div>
       </div>
-      {instructionsModal}
     </div>
-  )
+  );
 }
