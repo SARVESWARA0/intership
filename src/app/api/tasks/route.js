@@ -1,7 +1,6 @@
 import Airtable from 'airtable';
 import { NextResponse } from 'next/server';
 
-// Define the helper function locally (do not export it)
 async function getTask(taskId) {
   if (!process.env.AIRTABLE_API_KEY) {
     throw new Error('AIRTABLE_API_KEY is not configured');
@@ -30,7 +29,6 @@ async function getTask(taskId) {
   }
 }
 
-// Handle POST request (this is the only export)
 export async function POST(request) {
   try {
     const { taskId } = await request.json();
@@ -45,8 +43,12 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    console.log('Task fetched:', task.fields);
-    return NextResponse.json({ fields: task.fields });
+    // Clone the fields object and delete the 'resources' key
+    const filteredFields = { ...task.fields };
+    delete filteredFields.resources;
+
+    console.log('Task fetched:', filteredFields);
+    return NextResponse.json({ fields: filteredFields });
   } catch (error) {
     console.error('API route error:', error);
     return NextResponse.json(

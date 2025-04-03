@@ -381,7 +381,7 @@ export default function ClientTaskContent({ task, password }) {
           
           <SecretKeyDisplay password={password} />
           <div className={styles.secretKeyInstruction}>
-          You will need to enter this secret key when submitting your completed work. Don't share it with anyone and keep it private.
+          You will need to enter this secret key when submitting your completed work. Don&apos;t share it with anyone and keep it private.
 </div>
 
         </div>

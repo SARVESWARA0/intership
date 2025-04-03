@@ -99,10 +99,7 @@ export default function TaskPage() {
 
           const data = await res.json();
 
-          // Ensure we have the correct data structure
-          let candidate = data.fields || data.task?.fields || data;
-          const { resources, ...others } = candidate;
-          task = others;
+          task = data.fields || data.task?.fields || data;
 
           if (!task) {
             throw new Error('Invalid task data structure received from API');
