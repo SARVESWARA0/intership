@@ -235,9 +235,7 @@ function SecretKeyDisplay({ password }) {
 }
 
 // New default instructions with proper markdown formatting and subheadings
-const defaultInstructions = `
-# Core Requirements
-
+const defaultInstructions = `# Core Requirements
 ## AI Agent Functionality
 - Build an AI agent that solves the assigned use case problem
 - Implement persistent memory across different chat sessions using Vector DB
@@ -247,14 +245,10 @@ const defaultInstructions = `
 
 # Technical Requirements
 ## Your agent must demonstrate both:
-a. Long-term memory: Store and retrieve conversation history and important information
-      b. Real-time knowledge: Access current data through APIs relevant to your use case
-
-- Document each tool integration with a brief explanation of its purpose and implementation
-- Ensure proper error handling and user experience
+- Long-term memory: Store and retrieve conversation history and important information
+- Real-time knowledge: Access current data through APIs relevant to your use case
 
 # Technology Options
-
 ## LLM Providers (choose one)
 - Gemini (Recommended)
 - Groq
@@ -266,7 +260,6 @@ a. Long-term memory: Store and retrieve conversation history and important infor
 - Neo4J (vector index)
 
 # Development Stack
-
 ## Python Option
 - Agno (Recommended)
 - LangChain
@@ -290,7 +283,6 @@ a. Long-term memory: Store and retrieve conversation history and important infor
 - Render
 
 # Implementation Options
-
 ## Option 1: With UI (Highly Preferred)
 - Develop a clean, professional user interface
 - Integrate your AI agent API with the frontend
@@ -307,8 +299,8 @@ We recommend:
 - Finally deploy the application if possible
 
 # Timeline
--Final Submission Deadline is April 10, 2025  
--Plan your time accordingly to ensure all core requirements are met and focus on completing core functionality first before adding additional features
+- Final Submission Deadline is April 10, 2025  
+- Plan your time accordingly to ensure all core requirements are met and focus on completing core functionality first before adding additional features
 
 # Evaluation Criteria
 - Functionality of the AI agent
@@ -388,6 +380,10 @@ export default function ClientTaskContent({ task, password }) {
           
           
           <SecretKeyDisplay password={password} />
+          <div className={styles.secretKeyInstruction}>
+          You will need to enter this secret key when submitting your completed work. Don't share it with anyone and keep it private.
+</div>
+
         </div>
       </div>
     </div>

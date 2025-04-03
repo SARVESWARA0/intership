@@ -412,6 +412,22 @@
   pointer-events: none;
 }
 
+/* Added gap before bullet points */
+.instructionsSection ul {
+  padding-left: 1.5rem;
+}
+
+/* Added right margin for bullet markers */
+.instructionsSection li::marker {
+  margin-right: 1000.5rem;
+}
+.listItem .bulletPoint {
+  margin-right: 1rem;
+}
+.bulletPoint {
+  margin-left: 1rem; /* Adjust the value as needed */
+}
+
 .tipBox {
   margin-top: 1rem;
   padding: 1rem;
@@ -839,4 +855,10 @@
   to {
     opacity: 1;
   }
+}
+.secretKeyInstruction {
+  margin-top: 1rem;      /* Adds spacing above the instruction */
+  font-size: 0.875rem;   /* Adjusts the font size */
+  color: #555;           /* Change to your preferred color */
+  text-align: center;    /* Centers the text */
 }
