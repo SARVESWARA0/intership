@@ -241,17 +241,21 @@ const defaultInstructions = `# Core Requirements
 - Implement persistent memory across different chat sessions using Vector DB
 - Integrate real-time data retrieval through relevant APIs based on your use case
 - Ensure the agent can recall previous interactions and use them for context in new conversations
-- Implement at least 2 use-case specific tools and 4 memory-related tools
+- Implement at least 2 use-case specific tools and memory-related tools
 
 # Technical Requirements
 ## Your agent must demonstrate both:
-- Long-term memory: Store and retrieve conversation history and important information
-- Real-time knowledge: Access current data through APIs relevant to your use case
+- Long-term memory: Store and retrieve important information from previous conversations that persists across sessions, even after clearing chat history.
+- Real-time knowledge: Access current data through APIs relevant to your use case.
 
 # Technology Options
 ## LLM Providers (choose one)
 - Gemini (Recommended)
 - Groq
+
+## Embeddings Providers
+ - Gemini Embeddings(Recommended)
+ - Jina Embeddings
 
 ## Vector Database (choose one)
 - Pinecone (Recommended)
@@ -299,7 +303,7 @@ We recommend:
 - Finally deploy the application if possible
 
 # Timeline
-- Final Submission Deadline is April 10, 2025  
+- Final Submission Deadline is April 11, 2025  
 - Plan your time accordingly to ensure all core requirements are met and focus on completing core functionality first before adding additional features
 
 # Evaluation Criteria
@@ -312,11 +316,12 @@ We recommend:
 `;
 
 const techStackItems = [
+  {name:"Gemini Embeddings", url: "https://aistudio.google.com/prompts/new_chat"},
   { name: "Gemini", url: "https://aistudio.google.com/prompts/new_chat" },
   { name: "Groq", url: "https://groq.com/" },
   { name: "Pinecone", url: "https://www.pinecone.io/" },
   { name: "Supabase", url: "https://supabase.com/" },
-  { name: "Neon (pgvector)", url: "https://neon.tech/" },
+  { name: "Neon", url: "https://neon.tech/" },
   { name: "Neo4J", url: "https://neo4j.com/" },
   { name: "Agno", url: "https://www.agno.com/" },
   { name: "LangChain", url: "https://python.langchain.com/docs/introduction/" },
@@ -329,6 +334,8 @@ const techStackItems = [
   { name: "Vercel", url: "https://vercel.com" },
   { name: "Netlify", url: "https://www.netlify.com/" },
   { name: "Render", url: "https://render.com/" },
+  {name:"Jina Embeddings", url: "https://jina.ai/embeddings/"},
+  
 ];
 
 export default function ClientTaskContent({ task, password }) {
