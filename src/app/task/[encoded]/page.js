@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Buffer } from 'buffer';
 
