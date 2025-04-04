@@ -6,7 +6,7 @@ async function getTask(taskId) {
     throw new Error('AIRTABLE_API_KEY is not configured');
   }
   try {
-    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('app1LJNvLgSJaHCgU');
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
     const tasks = await new Promise((resolve, reject) => {
       base('Task')
         .select({

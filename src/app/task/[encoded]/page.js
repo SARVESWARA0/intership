@@ -30,15 +30,15 @@ export default function TaskPage() {
   const [error, setError] = useState(null);
 
   // Retrieve login flag and task functions from Zustand store
-  const { isLoggedIn, getTask, setTask, hasValidTask, getAssignment, setAssignment } = useTaskStore();
+  const { isLoggedIn, getTask, setTask,tasks, hasValidTask, getAssignment, setAssignment } = useTaskStore();
 
   // Use useLayoutEffect to check if the user is logged in.
   // If not, immediately redirect to the login page.
-  useLayoutEffect(() => {
-    if (!isLoggedIn) {
+  useEffect(() => {
+    if (!isLoggedIn && Object.keys(tasks).length>0) {
       router.push('/');
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn,router,tasks]);
 
   useEffect(() => {
     let isMounted = true;

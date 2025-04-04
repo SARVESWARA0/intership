@@ -2,7 +2,7 @@
 import Airtable from 'airtable';
 
 // Initialize Airtable with your API key and base ID
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base('app1LJNvLgSJaHCgU');
+const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
 // Helper: Generate an 8-character alphanumeric string
 function generateRandomKey(length = 8) {
