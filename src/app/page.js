@@ -101,7 +101,7 @@ export default function LoginPage() {
               style={{ objectFit: "contain" }}
             />
           </div>
-          <p className="loginHeading">Crayon&apos;d Gen AI Internship</p>
+          <p className="loginHeading">Crayon&apos;d Gen AI Hackathon</p>
         </div>
 
         <div className="inputFieldWrapper">
