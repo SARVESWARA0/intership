@@ -303,7 +303,7 @@ We recommend:
 - Finally deploy the application if possible
 
 # Timeline
-- Final Submission Deadline is April 11, 2025  
+- Final Submission Deadline is April 13, 2025  
 - Plan your time accordingly to ensure all core requirements are met and focus on completing core functionality first before adding additional features
 
 # Evaluation Criteria
