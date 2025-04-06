@@ -35,7 +35,7 @@ export async function POST(request) {
     const candidateRecords = await new Promise((resolve, reject) => {
       base('Candidate')
         .select({
-          filterByFormula: `{email} = '${email}'`,
+          filterByFormula: `LOWER({email}) = LOWER('${email}')`,
           maxRecords: 1,
         })
         .firstPage((err, records) => {
@@ -46,6 +46,8 @@ export async function POST(request) {
           }
         });
     });
+
+    console.log(candidateRecords,'candidateRecords')
 
     if (!candidateRecords || candidateRecords.length === 0) {
       // Candidate not found
