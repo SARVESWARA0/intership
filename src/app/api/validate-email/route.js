@@ -47,7 +47,6 @@ export async function POST(request) {
         });
     });
 
-    console.log(candidateRecords,'candidateRecords')
 
     if (!candidateRecords || candidateRecords.length === 0) {
       // Candidate not found
