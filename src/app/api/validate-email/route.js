@@ -5,14 +5,14 @@ import Airtable from 'airtable';
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
 // Helper: Generate an 8-character alphanumeric string
-function generateRandomKey(length = 8) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
+// function generateRandomKey(length = 8) {
+//   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//   let result = '';
+//   for (let i = 0; i < length; i++) {
+//     result += chars.charAt(Math.floor(Math.random() * chars.length));
+//   }
+//   return result;
+// }
 
 // Helper: Encode the taskId and key using Base64
 function encode(taskId, password) {
@@ -58,7 +58,7 @@ export async function POST(request) {
 
     // Candidate record exists
     const candidateRecord = candidateRecords[0];
-    const candidateRecordId = candidateRecord.id;
+    // const candidateRecordId = candidateRecord.id;
     const candidateStatus = candidateRecord.get('status');
 
     // Validate only if status is "registered" or "assigned"
