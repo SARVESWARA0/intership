@@ -72,55 +72,62 @@ export async function POST(request) {
     let taskId, key;
 
     if (candidateStatus === 'registered') {
-      // For a registered candidate, generate and assign a new password (key)
-      key = generateRandomKey(8);
+      // // For a registered candidate, generate and assign a new password (key)
+      // key = generateRandomKey(8);
 
-      // Update the candidate record with the new key (password)
-      await new Promise((resolve, reject) => {
-        base('Candidate').update(
-          [
-            {
-              id: candidateRecordId,
-              fields: {
-                key: key,
-                status:"assigned"
-              },
-            },
-          ],
-          (err, records) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(records);
-            }
-          }
-        );
-      });
+      // // Update the candidate record with the new key (password)
+      // await new Promise((resolve, reject) => {
+      //   base('Candidate').update(
+      //     [
+      //       {
+      //         id: candidateRecordId,
+      //         fields: {
+      //           key: key,
+      //           status:"assigned"
+      //         },
+      //       },
+      //     ],
+      //     (err, records) => {
+      //       if (err) {
+      //         reject(err);
+      //       } else {
+      //         resolve(records);
+      //       }
+      //     }
+      //   );
+      // });
 
-      // Fetch the taskId from the candidate record
-      taskId = candidateRecord.get('taskId');
-      if (!taskId) {
-        return new Response(
-          JSON.stringify({ error: 'Registered candidate missing task details' }),
-          { status: 500, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-      await new Promise((resolve, reject) => {
-        base('data').create(
-          {
-            name: candidateRecord.get('name'), // Make sure the candidate record contains a "name" field
-            email: email,
-            taskId: taskId,
-          },
-          (err, record) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(record);
-            }
-          }
-        );
-      });
+      // // Fetch the taskId from the candidate record
+      // taskId = candidateRecord.get('taskId');
+      // if (!taskId) {
+      //   return new Response(
+      //     JSON.stringify({ error: 'Registered candidate missing task details' }),
+      //     { status: 500, headers: { 'Content-Type': 'application/json' } }
+      //   );
+      // }
+      // await new Promise((resolve, reject) => {
+      //   base('data').create(
+      //     {
+      //       name: candidateRecord.get('name'), // Make sure the candidate record contains a "name" field
+      //       email: email,
+      //       taskId: taskId,
+      //     },
+      //     (err, record) => {
+      //       if (err) {
+      //         reject(err);
+      //       } else {
+      //         resolve(record);
+      //       }
+      //     }
+      //   );
+      // });
+
+
+      return new Response(
+        JSON.stringify({ exists: false }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+
     } else if (candidateStatus === 'assigned') {
       // STEP 2b: For an assigned candidate, simply fetch the stored taskId and key
       taskId = candidateRecord.get('taskId');
@@ -140,11 +147,11 @@ export async function POST(request) {
 
     // Return the encoded string along with task info
     return new Response(
-      JSON.stringify({ 
-        exists: true, 
+      JSON.stringify({
+        exists: true,
         encoded,
         taskId,
-        key 
+        key
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import useTaskStore from "../app/store/taskStore"; // adjust path as necessary
 
 export default function LoginPage() {
@@ -38,7 +38,7 @@ export default function LoginPage() {
       const response = await fetch("/api/validate-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.toLowerCase()}),
+        body: JSON.stringify({ email: email.toLowerCase() }),
       });
 
       if (!response.ok) {
@@ -124,7 +124,7 @@ export default function LoginPage() {
             }}
           />
         </div>
-
+        <p className="text-sm text-gray-500">Note: If you are a new candidate, you won’t get your assignment here anymore. But if you have already been given an assignment, you can keep using this resource to view it.</p>
         <button type="submit" id="loginButton" disabled={isLoading}>
           {isLoading ? "Processing..." : "LOGIN"}
         </button>

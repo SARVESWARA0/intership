@@ -1,15 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
 import {
-  Copy,
+  Award,
   BookOpen,
   CheckCircle,
-  Info,
-  Lock,
   ChevronDown,
   ChevronUp,
-  Award,
+  Copy,
+  Info,
+  Lock,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import styles from "./TaskDisplay.module.css";
 
 function isValidUrl(string) {
@@ -154,9 +154,8 @@ function CollapsibleSection({ title, icon, children, maxHeight = "1000px" }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`${styles.sectionHeader} ${styles.collapsibleHeader} ${
-          isOpen ? styles.sectionHeaderOpen : ""
-        }`}
+        className={`${styles.sectionHeader} ${styles.collapsibleHeader} ${isOpen ? styles.sectionHeaderOpen : ""
+          }`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className={styles.iconWrapper}>{icon}</div>
@@ -166,9 +165,8 @@ function CollapsibleSection({ title, icon, children, maxHeight = "1000px" }) {
         </div>
       </div>
       <div
-        className={`${styles.sectionContentWrapper} ${
-          isOpen ? styles.contentVisible : styles.contentHidden
-        }`}
+        className={`${styles.sectionContentWrapper} ${isOpen ? styles.contentVisible : styles.contentHidden
+          }`}
         style={{
           maxHeight: isOpen ? maxHeight : "0px",
           opacity: isOpen ? 1 : 0,
@@ -205,9 +203,8 @@ function SecretKeyDisplay({ password }) {
 
   return (
     <div
-      className={`${styles.secretKeyContainer} ${
-        isHovered ? styles.secretKeyHovered : ""
-      }`}
+      className={`${styles.secretKeyContainer} ${isHovered ? styles.secretKeyHovered : ""
+        }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -303,7 +300,7 @@ We recommend:
 - Finally deploy the application if possible
 
 # Timeline
-- Final Submission Deadline is April 13, 2025  
+- The final submission deadline is specified in the email you received
 - Plan your time accordingly to ensure all core requirements are met and focus on completing core functionality first before adding additional features
 
 # Evaluation Criteria
@@ -316,7 +313,7 @@ We recommend:
 `;
 
 const techStackItems = [
-  {name:"Gemini Embeddings", url: "https://aistudio.google.com/prompts/new_chat"},
+  { name: "Gemini Embeddings", url: "https://aistudio.google.com/prompts/new_chat" },
   { name: "Gemini", url: "https://aistudio.google.com/prompts/new_chat" },
   { name: "Groq", url: "https://groq.com/" },
   { name: "Pinecone", url: "https://www.pinecone.io/" },
@@ -334,8 +331,8 @@ const techStackItems = [
   { name: "Vercel", url: "https://vercel.com" },
   { name: "Netlify", url: "https://www.netlify.com/" },
   { name: "Render", url: "https://render.com/" },
-  {name:"Jina Embeddings", url: "https://jina.ai/embeddings/"},
-  
+  { name: "Jina Embeddings", url: "https://jina.ai/embeddings/" },
+
 ];
 
 export default function ClientTaskContent({ task, password }) {
@@ -365,7 +362,7 @@ export default function ClientTaskContent({ task, password }) {
             <div className={styles.titleSection}>
               <h1 className={styles.taskTitle}>{task.title}</h1>
               <div className={styles.taskBadges}>
-                
+
               </div>
             </div>
           </div>
@@ -376,7 +373,7 @@ export default function ClientTaskContent({ task, password }) {
             <div className={styles.tipBox}>
               <Award size={70} className={styles.tipIcon} />
               <p>
-              Note: You will receive another email with a link to submit your work. High preference will be given to candidates who implement AI agent functionality with UI.</p>
+                Note: You will receive another email with a link to submit your work. High preference will be given to candidates who implement AI agent functionality with UI.</p>
             </div>
           </CollapsibleSection>
           <CollapsibleSection title="Problem Statement" icon={<BookOpen size={24} className={styles.sectionIcon} />}>
@@ -384,12 +381,12 @@ export default function ClientTaskContent({ task, password }) {
               {convertLinksToJSX(task.description, techStackItems)}
             </div>
           </CollapsibleSection>
-          
-          
+
+
           <SecretKeyDisplay password={password} />
           <div className={styles.secretKeyInstruction}>
-          You will need to enter this secret key when submitting your completed work. Don&apos;t share it with anyone and keep it private.
-</div>
+            You will need to enter this secret key when submitting your completed work. Don&apos;t share it with anyone and keep it private.
+          </div>
 
         </div>
       </div>
